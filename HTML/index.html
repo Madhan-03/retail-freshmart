@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>FreshMart Pulse | Smart Retail Dashboard</title>
+    <!-- Google Fonts + Font Awesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            transition: background 0.3s ease, color 0.2s ease;
+        }
+
+        /* ========= THEME VARIABLES ========= */
+        :root {
+            --bg-primary: #f0f4f8;
+            --card-bg: #ffffff;
+            --text-primary: #1a2e26;
+            --text-secondary: #5a6e66;
+            --border-color: #e4e9ef;
+            --nav-bg: #ffffff;
+            --login-left-bg: linear-gradient(135deg, #1a4d2e 0%, #0e3a22 100%);
+            --login-left-text: white;
+            --input-bg: #fafdfb;
+            --input-border: #e2e8f0;
+            --kpi-bg: #ffffff;
+            --table-header-bg: #f8fbf9;
+            --shadow-sm: 0 6px 14px rgba(0, 0, 0, 0.02);
+        }
+
+        body.dark-theme {
+            --bg-primary: #0f1419;
+            --card-bg: #1e2a2a;
+            --text-primary: #e8f0ea;
+            --text-secondary: #9bb7ac;
+            --border-color: #2d3f3a;
+            --nav-bg: #1a2a24;
+            --login-left-bg: linear-gradient(135deg, #0d3522 0%, #062818 100%);
+            --login-left-text: #e2f0ea;
+            --input-bg: #2a3a34;
+            --input-border: #3e554c;
+            --kpi-bg: #1e2c28;
+            --table-header-bg: #253b34;
+            --shadow-sm: 0 6px 14px rgba(0, 0, 0, 0.2);
+        }
+
+        /* ========= LOGIN PAGE (SPLIT LAYOUT) ========= */
+        .login-container {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            background: var(--card-bg);
+        }
+
+        /* LEFT SIDE - FRESHMART BRANDING WITH IMAGE */
+        .login-left {
+            flex: 1.2;
+            background: var(--login-left-bg);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+            transition: background 0.3s ease;
+        }
+
+        .login-left::before {
+            content: "";
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" opacity="0.04"><path d="M12 2L15 8.5L22 9.5L17 14L18.5 21L12 17.5L5.5 21L7 14L2 9.5L9 8.5L12 2Z"/></svg>') repeat;
+            background-size: 55px;
+            pointer-events: none;
+        }
+
+        .freshmart-image {
+            text-align: center;
+            z-index: 2;
+            margin-bottom: 1.5rem;
+        }
+
+        .freshmart-image i {
+            font-size: 5.5rem;
+            color: rgba(255, 255, 245, 0.95);
+            margin: 0 0.3rem;
+            filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.2));
+        }
+
+        .login-left h1 {
+            color: var(--login-left-text);
+            font-size: 3.2rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin-top: 0.5rem;
+            z-index: 2;
+            text-align: center;
+        }
+
+        .login-left p {
+            color: rgba(255, 255, 240, 0.85);
+            font-size: 1rem;
+            max-width: 80%;
+            text-align: center;
+            margin-top: 1rem;
+            z-index: 2;
+        }
+
+        .freshmart-badge {
+            margin-top: 1.8rem;
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(4px);
+            padding: 0.5rem 1.2rem;
+            border-radius: 60px;
+            font-size: 0.85rem;
+            z-index: 2;
+        }
+
+        /* RIGHT SIDE - LOGIN FORM */
+        .login-right {
+            flex: 0.9;
+            background: var(--card-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s ease;
+            position: relative;
+        }
+
+        /* Theme Toggle inside login page (top right) */
+        .theme-toggle-login {
+            position: absolute;
+            top: 25px;
+            right: 30px;
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            border-radius: 40px;
+            padding: 8px 16px;
+            display: flex;
+            gap: 12px;
+            cursor: pointer;
+            z-index: 10;
+            transition: all 0.2s;
+        }
+
+        .theme-toggle-login i {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            transition: 0.2s;
+        }
+
+        .theme-toggle-login i.active-theme {
+            color: #f5b042;
+            text-shadow: 0 0 4px rgba(245, 176, 66, 0.5);
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 400px;
+            padding: 2rem;
+        }
+
+        .logo-mini {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 2rem;
+        }
+
+        .logo-mini i {
+            font-size: 2.2rem;
+            color: #1a4d2e;
+        }
+
+        .logo-mini span {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .login-right h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .welcome-text {
+            color: var(--text-secondary);
+            margin-bottom: 1.8rem;
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .input-group i {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #8aa99b;
+            z-index: 2;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 14px 15px 14px 45px;
+            border: 1.5px solid var(--input-border);
+            border-radius: 24px;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+            background: var(--input-bg);
+            color: var(--text-primary);
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #1a4d2e;
+            box-shadow: 0 0 0 3px rgba(26, 77, 46, 0.2);
+        }
+
+        .login-btn {
+            background: #1a4d2e;
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 32px;
+            font-weight: 600;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: 0.2s;
+        }
+
+        .login-btn:hover {
+            background: #0f3a23;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 18px rgba(26, 77, 46, 0.3);
+        }
+
+        .demo-note {
+            text-align: center;
+            margin-top: 1.5rem;
+            font-size: 0.75rem;
+            background: var(--input-bg);
+            padding: 8px;
+            border-radius: 60px;
+            color: var(--text-secondary);
+        }
+
+        /* ========= DASHBOARD PAGE ========= */
+        .dashboard-page {
+            display: none;
+            width: 100%;
+            height: 100%;
+            flex-direction: column;
+            background: var(--bg-primary);
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        /* navbar */
+        .dashboard-nav {
+            background: var(--nav-bg);
+            padding: 0.8rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 99;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-brand i {
+            font-size: 1.8rem;
+            color: #1a4d2e;
+        }
+
+        .nav-brand h3 {
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: var(--text-primary);
+        }
+
+        .user-info {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .user-badge {
+            background: var(--input-bg);
+            padding: 6px 14px;
+            border-radius: 40px;
+            font-weight: 500;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+        }
+
+        .theme-toggle-dash {
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 30px;
+            padding: 6px 12px;
+            cursor: pointer;
+            display: flex;
+            gap: 6px;
+            transition: 0.2s;
+            align-items: center;
+            font-size: 0.85rem;
+            color: var(--text-primary);
+        }
+
+        .logout-btn {
+            background: none;
+            border: 1px solid var(--border-color);
+            padding: 6px 14px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 500;
+            color: var(--text-primary);
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .logout-btn:hover {
+            background: #fef2ef;
+            border-color: #cba5a5;
+            color: #b13e3e;
+        }
+
+        /* dashboard content */
+        .dashboard-content {
+            padding: 1.2rem 1.5rem 2rem 1.5rem;
+        }
+
+        /* KPI CARDS */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.2rem;
+            margin-bottom: 2rem;
+        }
+
+        .kpi-card {
+            background: var(--kpi-bg);
+            border-radius: 28px;
+            padding: 1.1rem;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .kpi-title {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.3px;
+        }
+
+        .kpi-value {
+            font-size: 1.7rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            line-height: 1.2;
+            word-break: break-word;
+        }
+
+        .kpi-sub {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            margin-top: 6px;
+        }
+
+        .insight-row {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .chart-card,
+        .top-products-table {
+            flex: 1;
+            min-width: 240px;
+            background: var(--card-bg);
+            border-radius: 28px;
+            padding: 1.2rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .chart-card h3,
+        .top-products-table h3,
+        .sku-section h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-primary);
+        }
+
+        .product-list {
+            list-style: none;
+        }
+
+        .product-list li {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-color);
+            font-weight: 500;
+            color: var(--text-primary);
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .product-revenue {
+            font-weight: 700;
+            color: #1a4d2e;
+        }
+
+        .sku-section {
+            background: var(--card-bg);
+            border-radius: 28px;
+            padding: 1.2rem;
+            margin-bottom: 1.8rem;
+            border: 1px solid var(--border-color);
+            overflow-x: auto;
+        }
+
+        .sku-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            min-width: 500px;
+        }
+
+        .sku-table th {
+            text-align: left;
+            padding: 12px 8px;
+            background: var(--table-header-bg);
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .sku-table td {
+            padding: 10px 8px;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-primary);
+        }
+
+        .cognos-container {
+            background: var(--card-bg);
+            border-radius: 28px;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+            height: 460px;
+            width: 100%;
+        }
+
+        .cognos-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* ========= RESPONSIVE (MOBILE & TABLET) ========= */
+        @media (max-width: 900px) {
+            .login-container {
+                flex-direction: column;
+            }
+            .login-left {
+                flex: 1;
+                padding: 1.5rem;
+                min-height: 35vh;
+            }
+            .login-left h1 {
+                font-size: 2.2rem;
+            }
+            .login-left p {
+                max-width: 90%;
+                font-size: 0.9rem;
+            }
+            .freshmart-image i {
+                font-size: 3.5rem;
+            }
+            .login-right {
+                flex: 1.2;
+                padding: 1rem;
+            }
+            .login-card {
+                max-width: 100%;
+                padding: 1.2rem;
+            }
+            .theme-toggle-login {
+                top: 12px;
+                right: 16px;
+                padding: 6px 12px;
+            }
+        }
+
+        @media (max-width: 780px) {
+            .kpi-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+            .dashboard-content {
+                padding: 1rem;
+            }
+            .dashboard-nav {
+                padding: 0.8rem 1rem;
+            }
+            .nav-brand h3 {
+                font-size: 1rem;
+            }
+            .user-badge {
+                padding: 4px 10px;
+                font-size: 0.8rem;
+            }
+            .logout-btn {
+                padding: 4px 10px;
+                font-size: 0.8rem;
+            }
+            .kpi-value {
+                font-size: 1.4rem;
+            }
+            .chart-card, .top-products-table {
+                padding: 1rem;
+            }
+        }
+
+        @media (max-width: 520px) {
+            .kpi-grid {
+                grid-template-columns: 1fr;
+            }
+            .user-info {
+                width: 100%;
+                justify-content: space-between;
+            }
+            .nav-brand {
+                width: 100%;
+                justify-content: space-between;
+            }
+            .dashboard-nav {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .cognos-container {
+                height: 350px;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .login-left h1 {
+                font-size: 1.8rem;
+            }
+            .login-left p {
+                font-size: 0.75rem;
+            }
+            .kpi-value {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- LOGIN PAGE (Split View with Theme Toggle) -->
+    <div id="loginPage" class="login-container">
+        <!-- Theme toggle on login page (top right) -->
+        <div class="theme-toggle-login" id="loginThemeToggle">
+            <i class="fas fa-sun" id="lightIconLogin"></i>
+            <i class="fas fa-moon" id="darkIconLogin"></i>
+        </div>
+        <!-- LEFT: FreshMart Image & Brand -->
+        <div class="login-left">
+            <div class="freshmart-image">
+                <i class="fas fa-leaf"></i>
+                <i class="fas fa-chart-line"></i>
+                <i class="fas fa-store"></i>
+            </div>
+            <h1>FreshMart Pulse</h1>
+            <p>AI-driven retail intelligence · Real-time analytics · Smart inventory management</p>
+            <div class="freshmart-badge">
+                <i class="fas fa-chart-simple"></i> Powered by IBM Cognos
+            </div>
+        </div>
+        <!-- RIGHT: Login Form with Logo -->
+        <div class="login-right">
+            <div class="login-card">
+                <div class="logo-mini">
+                    <i class="fas fa-cart-shopping"></i>
+                    <span>FreshMart IQ</span>
+                </div>
+                <h2>Welcome back</h2>
+                <div class="welcome-text">Sign in to access your executive dashboard</div>
+                <form id="loginForm">
+                    <div class="input-group">
+                        <i class="fas fa-envelope"></i>
+                        <input type="text" id="username" placeholder="Email / Username" value="analyst@freshmart.com">
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="password" placeholder="Password" value="fresh123">
+                    </div>
+                    <button type="submit" class="login-btn"><i class="fas fa-chart-pie"></i> Access Dashboard</button>
+                    <div class="demo-note"><i class="fas fa-info-circle"></i> Demo: any credentials accepted —
+                        Light/Dark theme ready</div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- DASHBOARD PAGE -->
+    <div id="dashboardPage" class="dashboard-page">
+        <div class="dashboard-nav">
+            <div class="nav-brand">
+                <i class="fas fa-chart-line"></i>
+                <h3>FreshMart Pulse · Command Center</h3>
+            </div>
+            <div class="user-info">
+                <div class="theme-toggle-dash" id="dashThemeToggle">
+                    <i class="fas fa-sun"></i> / <i class="fas fa-moon"></i>
+                    <span style="font-size:0.7rem;">Theme</span>
+                </div>
+                <div class="user-badge"><i class="fas fa-user-circle"></i> <span id="displayUsername">Analyst</span>
+                </div>
+                <button id="logoutBtn" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+            </div>
+        </div>
+        <div class="dashboard-content">
+            <!-- KPI Cards -->
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-title"><i class="fas fa-pound-sign"></i> TOTAL SALES (£)</div>
+                    <div class="kpi-value" id="totalSalesValue">£11.26M</div>
+                    <div class="kpi-sub">↑ +12.4% vs last period</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-title"><i class="fas fa-chart-simple"></i> GROSS PROFIT (£)</div>
+                    <div class="kpi-value" id="grossProfitValue">£2.46M</div>
+                    <div class="kpi-sub">margin 21.8%</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-title"><i class="fas fa-tag"></i> AVG. DISCOUNT (£)</div>
+                    <div class="kpi-value" id="avgDiscountValue">£6,734</div>
+                    <div class="kpi-sub">promotional efficiency</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-title"><i class="fas fa-boxes"></i> PRODUCTS SOLD</div>
+                    <div class="kpi-value" id="productsSoldValue">200</div>
+                    <div class="kpi-sub">unique SKUs active</div>
+                </div>
+            </div>
+
+            <div class="insight-row">
+                <div class="chart-card">
+                    <h3><i class="fas fa-chart-pie"></i> Sales by Category</h3>
+                    <canvas id="categoryChart" width="400" height="220" style="max-height:220px; width:100%"></canvas>
+                </div>
+                <div class="top-products-table">
+                    <h3><i class="fas fa-trophy"></i> Top 5 Products (Revenue)</h3>
+                    <ul class="product-list" id="topProductsList"></ul>
+                </div>
+            </div>
+
+            <div class="sku-section">
+                <h3><i class="fas fa-table-list"></i> Top Performing SKUs</h3>
+                <table class="sku-table" id="skuTable">
+                    <thead>
+                        <tr>
+                            <th>Product ID</th>
+                            <th>Product Name</th>
+                            <th>Category</th>
+                            <th>Sales (£)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="skuTableBody"></tbody>
+                </table>
+            </div>
+
+            <div class="cognos-container">
+                <iframe id="cognosFrame"
+                    src="https://ap2.ca.analytics.ibm.com/bi/?perspective=dashboard&amp;pathRef=.my_folders%2FQ6.Dashboard%2BCreation&amp;closeWindowOnLastView=true&amp;ui_appbar=false&amp;ui_navbar=false&amp;shareMode=embedded&amp;action=view&amp;mode=dashboard&amp;subView=model0000019d5744534c_00000002&amp;nav_filter=true"
+                    width="100%" height="100%" frameborder="0" gesture="media" allow="encrypted-media"
+                    allowfullscreen=""></iframe>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            // --- Data based on FreshMart dataset
+            const salesData = { totalSales: 11256342.89, grossProfit: 2459823.78, avgDiscount: 6734.23, productsSold: 200 };
+            const categorySales = { "Groceries": 1250000, "Beverages": 980000, "Snacks": 1670000, "Personal Care": 2040000, "Household": 1890000, "Fresh Produce": 2210000, "Dairy": 1460000 };
+            const topProducts = [
+                { name: "Product_039 (Dairy Elite)", revenue: 197611.26 },
+                { name: "Product_077 (Beverage Plus)", revenue: 179702.20 },
+                { name: "Product_009 (Household Pack)", revenue: 163606.40 },
+                { name: "Product_010 (Snack Delight)", revenue: 165118.05 },
+                { name: "Product_053 (Fresh Harvest)", revenue: 156705.44 }
+            ];
+            const topSKUs = [
+                { id: "PRD0039", name: "Product_039", category: "Dairy", sales: 197611.26 },
+                { id: "PRD0077", name: "Product_077", category: "Beverages", sales: 179702.20 },
+                { id: "PRD0009", name: "Product_009", category: "Household", sales: 163606.40 },
+                { id: "PRD0010", name: "Product_010", category: "Snacks", sales: 165118.05 },
+                { id: "PRD0053", name: "Product_053", category: "Fresh Produce", sales: 156705.44 }
+            ];
+
+            function formatCurrency(value) {
+                if (value >= 1e6) return '£' + (value / 1e6).toFixed(2) + 'M';
+                if (value >= 1e3) return '£' + (value / 1e3).toFixed(1) + 'k';
+                return '£' + value.toFixed(2);
+            }
+
+            function updateKPIcards() {
+                document.getElementById('totalSalesValue').innerText = formatCurrency(salesData.totalSales);
+                document.getElementById('grossProfitValue').innerText = formatCurrency(salesData.grossProfit);
+                document.getElementById('avgDiscountValue').innerText = '£' + salesData.avgDiscount.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+                document.getElementById('productsSoldValue').innerText = salesData.productsSold;
+            }
+
+            let categoryChartInstance = null;
+            function renderCategoryChart() {
+                const ctx = document.getElementById('categoryChart').getContext('2d');
+                if (categoryChartInstance) categoryChartInstance.destroy();
+                categoryChartInstance = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: { labels: Object.keys(categorySales), datasets: [{ data: Object.values(categorySales), backgroundColor: ['#2c6e49', '#3b8c5e', '#5fa87c', '#8fc0a9', '#cfe8cf', '#a1cca5', '#4b8b6b'], borderWidth: 0 }] },
+                    options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'bottom', labels: { font: { size: 11 } } } } }
+                });
+            }
+
+            function renderTopProducts() {
+                const container = document.getElementById('topProductsList');
+                container.innerHTML = '';
+                topProducts.forEach(p => { const li = document.createElement('li'); li.innerHTML = `<span class="product-name">${p.name}</span><span class="product-revenue">${formatCurrency(p.revenue)}</span>`; container.appendChild(li); });
+            }
+
+            function renderSKUTable() {
+                const tbody = document.getElementById('skuTableBody');
+                tbody.innerHTML = '';
+                topSKUs.forEach(sku => { const row = tbody.insertRow(); row.insertCell(0).innerText = sku.id; row.insertCell(1).innerText = sku.name; row.insertCell(2).innerText = sku.category; row.insertCell(3).innerText = formatCurrency(sku.sales); });
+            }
+
+            // ========= LIGHT / DARK THEME MANAGEMENT =========
+            function setTheme(theme) {
+                if (theme === 'dark') {
+                    document.body.classList.add('dark-theme');
+                    localStorage.setItem('freshmart_theme', 'dark');
+                } else {
+                    document.body.classList.remove('dark-theme');
+                    localStorage.setItem('freshmart_theme', 'light');
+                }
+                updateThemeIcons();
+            }
+
+            function updateThemeIcons() {
+                const isDark = document.body.classList.contains('dark-theme');
+                const sunIcons = document.querySelectorAll('.fa-sun');
+                const moonIcons = document.querySelectorAll('.fa-moon');
+                sunIcons.forEach(icon => { if (isDark) icon.style.opacity = '0.5'; else icon.style.opacity = '1'; });
+                moonIcons.forEach(icon => { if (isDark) icon.style.opacity = '1'; else icon.style.opacity = '0.5'; });
+            }
+
+            function toggleTheme() {
+                const isDark = document.body.classList.contains('dark-theme');
+                setTheme(isDark ? 'light' : 'dark');
+            }
+
+            function initTheme() {
+                const saved = localStorage.getItem('freshmart_theme');
+                if (saved === 'dark') setTheme('dark');
+                else setTheme('light');
+            }
+
+            // --- Login & Session logic
+            const loginPage = document.getElementById('loginPage');
+            const dashboardPage = document.getElementById('dashboardPage');
+            const loginForm = document.getElementById('loginForm');
+            const logoutBtn = document.getElementById('logoutBtn');
+            const displaySpan = document.getElementById('displayUsername');
+
+            function validateLogin(user, pwd) { return user && user.trim() !== "" && pwd && pwd.trim() !== ""; }
+
+            function showDashboard(username) {
+                let displayName = username.trim();
+                if (displayName.includes('@')) displayName = displayName.split('@')[0];
+                displayName = displayName.charAt(0).toUpperCase() + displayName.slice(1);
+                if (displaySpan) displaySpan.innerText = displayName;
+                localStorage.setItem('freshmart_user', displayName);
+                localStorage.setItem('freshmart_logged_in', 'true');
+                loginPage.style.display = 'none';
+                dashboardPage.style.display = 'flex';
+                updateKPIcards();
+                renderCategoryChart();
+                renderTopProducts();
+                renderSKUTable();
+                // Ensure iframe doesn't lose state but resetting not needed
+                const iframe = document.getElementById('cognosFrame');
+                if (iframe && iframe.src) { const src = iframe.src; iframe.src = src; }
+                initTheme();
+            }
+
+            function logout() {
+                localStorage.removeItem('freshmart_user');
+                localStorage.removeItem('freshmart_logged_in');
+                loginPage.style.display = 'flex';
+                dashboardPage.style.display = 'none';
+                document.getElementById('username').value = 'analyst@freshmart.com';
+                document.getElementById('password').value = 'fresh123';
+                initTheme();
+            }
+
+            function handleLoginSubmit(e) {
+                e.preventDefault();
+                const user = document.getElementById('username').value;
+                const pwd = document.getElementById('password').value;
+                if (validateLogin(user, pwd)) showDashboard(user);
+                else alert("Please enter valid credentials (any demo)");
+            }
+
+            function checkSession() {
+                if (localStorage.getItem('freshmart_logged_in') === 'true') {
+                    const storedUser = localStorage.getItem('freshmart_user') || "Analyst";
+                    showDashboard(storedUser);
+                } else {
+                    loginPage.style.display = 'flex';
+                    dashboardPage.style.display = 'none';
+                    initTheme();
+                }
+            }
+
+            loginForm.addEventListener('submit', handleLoginSubmit);
+            logoutBtn.addEventListener('click', logout);
+
+            // Theme toggle listeners
+            const loginThemeToggle = document.getElementById('loginThemeToggle');
+            const dashThemeToggle = document.getElementById('dashThemeToggle');
+            if (loginThemeToggle) loginThemeToggle.addEventListener('click', toggleTheme);
+            if (dashThemeToggle) dashThemeToggle.addEventListener('click', toggleTheme);
+
+            checkSession();
+            window.addEventListener('resize', () => { if (categoryChartInstance) categoryChartInstance.resize(); });
+        })();
+    </script>
+</body>
+</html>
