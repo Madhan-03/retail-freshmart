@@ -23,7 +23,7 @@ It provides a clean dashboard interface to help store managers make data-driven 
 
 - Frontend       : HTML, CSS, JavaScript
 - Visualization  : Charts / Dashboard components
-- Hosting        : Netlify
+- Hosting        : Netlify / GitHub 
 
 ---
 
@@ -44,4 +44,8 @@ The goal of this project is to simulate a real-world retail management system th
 
 ## 👨‍💻 Author
 
-Madhan Kumar  
+Madhan Kumar 
+
+GitHub   : [https://github.com/Madhan-03]
+
+LinkedIn : [www.linkedin.com/in/madhan-kumar-128644362]
