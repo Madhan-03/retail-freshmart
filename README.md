@@ -21,9 +21,9 @@ It provides a clean dashboard interface to help store managers make data-driven 
 
 ## 🛠️ Tech Stack
 
-- Frontend       : HTML, CSS, JavaScript
-- Visualization  : Charts / Dashboard components
-- Hosting        : Netlify / GitHub 
+- Frontend       : HTML with Inner CSS & JS.
+- Visualization  : Charts / Dashboard Components.
+- Hosting        : Netlify / GitHub. 
 
 ---
 
