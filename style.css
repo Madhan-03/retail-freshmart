@@ -1,0 +1,746 @@
+/* style.css - FreshMart Pulse Dashboard Theme */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Inter", sans-serif;
+  background: var(--bg-primary);
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  transition:
+    background 0.3s ease,
+    color 0.2s ease;
+}
+
+/* ========= THEME VARIABLES ========= */
+:root {
+  --bg-primary: #f0f4f8;
+  --card-bg: #ffffff;
+  --text-primary: #1a2e26;
+  --text-secondary: #5a6e66;
+  --border-color: #e4e9ef;
+  --nav-bg: #ffffff;
+  --login-left-bg: linear-gradient(135deg, #1a4d2e 0%, #0e3a22 100%);
+  --login-left-text: white;
+  --input-bg: #fafdfb;
+  --input-border: #e2e8f0;
+  --kpi-bg: #ffffff;
+  --table-header-bg: #f8fbf9;
+  --shadow-sm: 0 6px 14px rgba(0, 0, 0, 0.02);
+  --btn-hover: #0f3a23;
+  --success-color: #2ecc71;
+  --error-color: #e74c3c;
+}
+
+body.dark-theme {
+  --bg-primary: #0f1419;
+  --card-bg: #1e2a2a;
+  --text-primary: #e8f0ea;
+  --text-secondary: #9bb7ac;
+  --border-color: #2d3f3a;
+  --nav-bg: #1a2a24;
+  --login-left-bg: linear-gradient(135deg, #0d3522 0%, #062818 100%);
+  --login-left-text: #e2f0ea;
+  --input-bg: #2a3a34;
+  --input-border: #3e554c;
+  --kpi-bg: #1e2c28;
+  --table-header-bg: #253b34;
+  --shadow-sm: 0 6px 14px rgba(0, 0, 0, 0.2);
+  --btn-hover: #1e5a3a;
+}
+
+/* ========= LOGIN PAGE (SPLIT LAYOUT) ========= */
+.login-container {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  background: var(--card-bg);
+}
+
+/* LEFT SIDE - FRESHMART BRANDING */
+.login-left {
+  flex: 1.2;
+  background: var(--login-left-bg);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  position: relative;
+  overflow: hidden;
+  transition: background 0.3s ease;
+}
+
+.login-left::before {
+  content: "";
+  position: absolute;
+  width: 200%;
+  height: 200%;
+  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" opacity="0.04"><path d="M12 2L15 8.5L22 9.5L17 14L18.5 21L12 17.5L5.5 21L7 14L2 9.5L9 8.5L12 2Z"/></svg>')
+    repeat;
+  background-size: 55px;
+  pointer-events: none;
+}
+
+.freshmart-image {
+  text-align: center;
+  z-index: 2;
+  margin-bottom: 1.5rem;
+}
+
+.freshmart-image i {
+  font-size: 5.5rem;
+  color: rgba(255, 255, 245, 0.95);
+  margin: 0 0.3rem;
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.2));
+}
+
+.login-left h1 {
+  color: var(--login-left-text);
+  font-size: 3.2rem;
+  font-weight: 800;
+  letter-spacing: -1px;
+  margin-top: 0.5rem;
+  z-index: 2;
+  text-align: center;
+}
+
+.login-left p {
+  color: rgba(255, 255, 240, 0.85);
+  font-size: 1rem;
+  max-width: 80%;
+  text-align: center;
+  margin-top: 1rem;
+  z-index: 2;
+}
+
+.freshmart-badge {
+  margin-top: 1.8rem;
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(4px);
+  padding: 0.5rem 1.2rem;
+  border-radius: 60px;
+  font-size: 0.85rem;
+  z-index: 2;
+  color: var(--login-left-text);
+}
+
+/* RIGHT SIDE - LOGIN/SIGNUP FORM */
+.login-right {
+  flex: 0.9;
+  background: var(--card-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s ease;
+  position: relative;
+}
+
+/* Theme Toggle inside login page (top right) */
+.theme-toggle-login {
+  position: absolute;
+  top: 25px;
+  right: 30px;
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  border-radius: 40px;
+  padding: 8px 16px;
+  display: flex;
+  gap: 12px;
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.2s;
+}
+
+.theme-toggle-login i {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  transition: 0.2s;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 420px;
+  padding: 2rem;
+}
+
+.logo-mini {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 2rem;
+}
+
+.logo-mini i {
+  font-size: 2.2rem;
+  color: #1a4d2e;
+}
+
+.logo-mini span {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.login-right h2 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+}
+
+.welcome-text {
+  color: var(--text-secondary);
+  margin-bottom: 1.8rem;
+  font-size: 0.95rem;
+}
+
+.input-group {
+  margin-bottom: 1.2rem;
+  position: relative;
+}
+
+.input-group i {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #8aa99b;
+  z-index: 2;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 14px 15px 14px 45px;
+  border: 1.5px solid var(--input-border);
+  border-radius: 24px;
+  font-size: 0.95rem;
+  transition: all 0.2s;
+  background: var(--input-bg);
+  color: var(--text-primary);
+}
+
+.input-group input:focus {
+  outline: none;
+  border-color: #1a4d2e;
+  box-shadow: 0 0 0 3px rgba(26, 77, 46, 0.2);
+}
+
+.input-group input.error {
+  border-color: var(--error-color);
+}
+
+.input-group input.success {
+  border-color: var(--success-color);
+}
+
+.login-btn {
+  background: #1a4d2e;
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 32px;
+  font-weight: 600;
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: 0.2s;
+  margin-top: 0.5rem;
+}
+
+.login-btn:hover {
+  background: var(--btn-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(26, 77, 46, 0.3);
+}
+
+.login-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.form-footer {
+  text-align: center;
+  margin-top: 1.2rem;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.form-link {
+  color: #1a4d2e;
+  text-decoration: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.form-link:hover {
+  text-decoration: underline;
+  color: var(--btn-hover);
+}
+
+.demo-note {
+  text-align: center;
+  margin-top: 1.2rem;
+  font-size: 0.75rem;
+  background: var(--input-bg);
+  padding: 8px 12px;
+  border-radius: 60px;
+  color: var(--text-secondary);
+}
+
+/* Toast Notification */
+.toast-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.toast {
+  padding: 14px 20px;
+  border-radius: 12px;
+  color: white;
+  font-weight: 500;
+  font-size: 0.9rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  animation: slideInRight 0.4s ease;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 280px;
+  max-width: 400px;
+}
+
+.toast-success {
+  background: #27ae60;
+}
+
+.toast-error {
+  background: #e74c3c;
+}
+
+.toast-info {
+  background: #3498db;
+}
+
+.toast i {
+  font-size: 1.2rem;
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* ========= DASHBOARD PAGE ========= */
+.dashboard-page {
+  display: none;
+  width: 100%;
+  height: 100%;
+  flex-direction: column;
+  background: var(--bg-primary);
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* navbar */
+.dashboard-nav {
+  background: var(--nav-bg);
+  padding: 0.8rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border-color);
+  position: sticky;
+  top: 0;
+  z-index: 99;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+}
+
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.nav-brand i {
+  font-size: 1.8rem;
+  color: #1a4d2e;
+}
+
+.nav-brand h3 {
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: var(--text-primary);
+}
+
+.user-info {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.user-badge {
+  background: var(--input-bg);
+  padding: 6px 14px;
+  border-radius: 40px;
+  font-weight: 500;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+}
+
+.theme-toggle-dash {
+  background: var(--input-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 30px;
+  padding: 6px 12px;
+  cursor: pointer;
+  display: flex;
+  gap: 6px;
+  transition: 0.2s;
+  align-items: center;
+  font-size: 0.85rem;
+  color: var(--text-primary);
+}
+
+.logout-btn {
+  background: none;
+  border: 1px solid var(--border-color);
+  padding: 6px 14px;
+  border-radius: 30px;
+  cursor: pointer;
+  font-weight: 500;
+  color: var(--text-primary);
+  transition: 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.logout-btn:hover {
+  background: #fef2ef;
+  border-color: #cba5a5;
+  color: #b13e3e;
+}
+
+/* dashboard content */
+.dashboard-content {
+  padding: 1.2rem 1.5rem 2rem 1.5rem;
+}
+
+/* KPI CARDS */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.2rem;
+  margin-bottom: 2rem;
+}
+
+.kpi-card {
+  background: var(--kpi-bg);
+  border-radius: 28px;
+  padding: 1.1rem;
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-sm);
+}
+
+.kpi-title {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.3px;
+}
+
+.kpi-title i {
+  margin-right: 4px;
+}
+
+.kpi-value {
+  font-size: 1.7rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  line-height: 1.2;
+  word-break: break-word;
+}
+
+.kpi-sub {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  margin-top: 6px;
+}
+
+.insight-row {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.chart-card,
+.top-products-table {
+  flex: 1;
+  min-width: 240px;
+  background: var(--card-bg);
+  border-radius: 28px;
+  padding: 1.2rem;
+  border: 1px solid var(--border-color);
+}
+
+.chart-card h3,
+.top-products-table h3,
+.sku-section h3,
+.cognos-header h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-primary);
+}
+
+.product-list {
+  list-style: none;
+}
+
+.product-list li {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border-color);
+  font-weight: 500;
+  color: var(--text-primary);
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.product-revenue {
+  font-weight: 700;
+  color: #1a4d2e;
+}
+
+.sku-section {
+  background: var(--card-bg);
+  border-radius: 28px;
+  padding: 1.2rem;
+  margin-bottom: 1.8rem;
+  border: 1px solid var(--border-color);
+  overflow-x: auto;
+}
+
+.sku-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+  min-width: 500px;
+}
+
+.sku-table th {
+  text-align: left;
+  padding: 12px 8px;
+  background: var(--table-header-bg);
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.sku-table td {
+  padding: 10px 8px;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-primary);
+}
+
+/* ========= COGNOS CONTAINER ========= */
+.cognos-container {
+  background: var(--card-bg);
+  border-radius: 28px;
+  border: 1px solid var(--border-color);
+  overflow: hidden;
+  height: 600px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.cognos-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.8rem 1.2rem;
+  border-bottom: 1px solid var(--border-color);
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  background: var(--card-bg);
+  flex-shrink: 0;
+}
+
+.cognos-controls {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.cognos-btn {
+  padding: 6px 14px;
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  background: var(--input-bg);
+  color: var(--text-primary);
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 500;
+}
+
+.cognos-btn:hover {
+  background: var(--border-color);
+  transform: translateY(-1px);
+}
+
+.cognos-btn-primary {
+  background: #1a4d2e;
+  color: white;
+  border-color: #1a4d2e;
+}
+
+.cognos-btn-primary:hover {
+  background: var(--btn-hover);
+  border-color: var(--btn-hover);
+}
+
+.cognos-container iframe {
+  flex: 1;
+  width: 100%;
+  border: none;
+  background: #ffffff;
+}
+
+/* ========= RESPONSIVE ========= */
+@media (max-width: 900px) {
+  .login-container {
+    flex-direction: column;
+  }
+  .login-left {
+    flex: 1;
+    padding: 1.5rem;
+    min-height: 30vh;
+  }
+  .login-left h1 {
+    font-size: 2.2rem;
+  }
+  .login-left p {
+    max-width: 90%;
+    font-size: 0.9rem;
+  }
+  .freshmart-image i {
+    font-size: 3.5rem;
+  }
+  .login-right {
+    flex: 1.2;
+    padding: 1rem;
+  }
+  .login-card {
+    max-width: 100%;
+    padding: 1.2rem;
+  }
+  .theme-toggle-login {
+    top: 12px;
+    right: 16px;
+    padding: 6px 12px;
+  }
+  .cognos-container {
+    height: 450px;
+  }
+}
+
+@media (max-width: 780px) {
+  .kpi-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+  .dashboard-content {
+    padding: 1rem;
+  }
+  .dashboard-nav {
+    padding: 0.8rem 1rem;
+  }
+  .nav-brand h3 {
+    font-size: 1rem;
+  }
+  .kpi-value {
+    font-size: 1.4rem;
+  }
+  .cognos-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+  .cognos-controls {
+    justify-content: flex-end;
+  }
+  .cognos-container {
+    height: 400px;
+  }
+}
+
+@media (max-width: 520px) {
+  .kpi-grid {
+    grid-template-columns: 1fr;
+  }
+  .user-info {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .nav-brand {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .dashboard-nav {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .cognos-container {
+    height: 350px;
+  }
+  .cognos-controls {
+    justify-content: stretch;
+  }
+  .cognos-btn {
+    flex: 1;
+    justify-content: center;
+  }
+  .toast {
+    min-width: auto;
+    max-width: 90%;
+    font-size: 0.8rem;
+  }
+}
