@@ -53,7 +53,7 @@ The system now includes a secure user authentication module with Login, Signup, 
 * Frontend        : HTML, CSS and JavaScript.
 * Visualization   : Charts / Dashboard Components.
 * Tools           : IBM Cognos Analytics.
-* Hosting         : Netlify / GitHub.
+* Hosting         : Netlify & GitHub.
 
 ### Features & Components
 
