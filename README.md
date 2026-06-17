@@ -6,7 +6,7 @@ The system now includes a secure user authentication module with Login, Signup, 
 
 ## 🔗 Live Demo
 
-**Live Demo          :** [https://retail-freshmart.netlify.app/]
+**Live Demo          :** [https://madhan-03.github.io/retail-freshmart/]
 
 **GitHub Repository  :** [https://github.com/Madhan-03/retail-freshmart.git]
 
@@ -42,9 +42,9 @@ The system now includes a secure user authentication module with Login, Signup, 
 
 ### 🔍 Search & Filter
 
-* Quick Product Search
-* Data Filtering for Better Insights
-* Organized Information Display
+* Quick Product Search.
+* Data Filtering for Better Insights.
+* Organized Information Display.
 
 ---
 
